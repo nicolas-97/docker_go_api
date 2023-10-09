@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_PASSWORD=FGHqB0nR
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - app-network
+  
+  service:
+    build:
+      context: ./api
+      dockerfile: ./docker/Dockerfile
+    restart: on-failure
+    working_dir: /var/www
+    ports:
+      - '80:8080'
+    volumes:
+      - ./api/:/var/www
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+volumes:
+  db:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

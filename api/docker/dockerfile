@@ -1,0 +1,11 @@
+FROM golang:1.21
+
+WORKDIR /var/www
+
+ADD ./ /var/www/
+
+RUN go mod download && go mod verify
+
+RUN go build -v -o /usr/local/bin/api ./...
+
+CMD ["api"]
